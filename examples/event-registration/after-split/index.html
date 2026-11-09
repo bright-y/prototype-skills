@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>周末小聚 · 活动报名</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">跳到内容</a>
+  <header class="site-header">
+    <a class="brand" href="#events" aria-label="周末小聚，返回活动列表"><span class="brand-mark" aria-hidden="true">聚</span>周末小聚</a>
+    <span class="header-note">给好奇心留一点时间</span>
+    <a class="nav-link" href="#bookings">我的报名 <span id="booking-count">0</span></a>
+  </header>
+  <main id="main" tabindex="-1"></main>
+  <footer class="site-footer"><span>周末小聚 · 活动报名演示</span><span>虚构活动，报名仅保存在当前浏览器</span></footer>
+  <dialog id="confirmation" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+    <div class="dialog-content">
+      <p class="eyebrow">最后确认一下</p>
+      <h2 id="dialog-title">报名信息准备好了吗？</h2>
+      <p id="dialog-description">确认后会在当前浏览器保存一条演示报名记录。</p>
+      <div id="confirmation-details"></div>
+      <p id="dialog-error" class="error" role="alert"></p>
+      <div class="button-row"><button id="cancel-confirmation" class="button secondary" type="button">再检查一下</button><button id="save-registration" class="button" type="button">确认报名</button></div>
+    </div>
+  </dialog>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/fields.js"></script>
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/pages.js"></script>
+  <script src="assets/js/dialog.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

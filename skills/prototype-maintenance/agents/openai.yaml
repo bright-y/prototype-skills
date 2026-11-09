@@ -1,0 +1,7 @@
+interface:
+  display_name: "原型维护"
+  short_description: "维护交互原型，明确页面、组件、数据、样式和弹窗的修改位置及验证方式"
+  brand_color: "#1769FF"
+  default_prompt: "Use $prototype-maintenance to organize this interactive prototype into maintainable page, field, modal, data, CSS, and validation layers."
+policy:
+  allow_implicit_invocation: true

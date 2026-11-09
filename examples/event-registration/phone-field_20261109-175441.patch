@@ -1,0 +1,22 @@
+--- after-split/assets/js/fields.js
++++ after-change/assets/js/fields.js
+@@ -7,7 +7,8 @@
+   };
+   D.fields = [
+     { name: 'name', label: '怎么称呼你', type: 'text', autocomplete: 'name', placeholder: '填写姓名或昵称', maxLength: 40, hint: '方便活动当天互相认识。', validate: function (value) { return value.trim() ? '' : '请填写姓名或昵称。'; } },
+-    { name: 'email', label: '联系邮箱', type: 'email', autocomplete: 'email', placeholder: '例如 demo@example.com', maxLength: 120, hint: '本演示不会发送邮件。', validate: function (value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()) ? '' : '请填写完整的邮箱地址，例如 demo@example.com。'; } }
++    { name: 'email', label: '联系邮箱', type: 'email', autocomplete: 'email', placeholder: '例如 demo@example.com', maxLength: 120, hint: '本演示不会发送邮件。', validate: function (value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()) ? '' : '请填写完整的邮箱地址，例如 demo@example.com。'; } },
++    { name: 'phone', label: '联系手机号', type: 'tel', autocomplete: 'tel', placeholder: '填写 11 位大陆手机号', maxLength: 11, hint: '本案例仅演示中国大陆手机号格式，不会拨打或发送短信。', validate: function (value) { return /^1[3-9]\d{9}$/.test(value.trim()) ? '' : '请填写 11 位中国大陆手机号。'; } }
+   ];
+   D.validate = function (values) {
+     var errors = {};
+--- after-split/assets/js/store.js
++++ after-change/assets/js/store.js
+@@ -21,6 +21,7 @@
+         var existing = records.find(function (record) { return record.id === input.id; });
+         if (existing) return existing;
+         var record = { id: input.id, eventId: input.eventId, name: input.name, email: input.email, createdAt: input.createdAt };
++        if (typeof input.phone === 'string') record.phone = input.phone;
+         // Keep old records intact; adding a registration never rewrites their fields.
+         try { storage.setItem(D.storageKey, JSON.stringify(records.concat([record]))); } catch (error) { throw new Error('当前浏览器暂时无法保存报名，请检查本地存储空间后重试。'); }
+         return record;

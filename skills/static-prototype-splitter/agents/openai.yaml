@@ -1,0 +1,4 @@
+interface:
+  display_name: "静态原型拆分"
+  short_description: "拆分与打包静态原型，保留视觉和交互，整理页面、组件及交付入口"
+  default_prompt: "Use $static-prototype-splitter to split this static prototype into maintainable pages while preserving its visuals and interactions."

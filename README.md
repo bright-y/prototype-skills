@@ -1,30 +1,57 @@
 # Prototype Skills
 
-面向产品与设计协作的两个 Agent Skills：拆分已有 HTML 原型，并让后续修改有明确的文件位置，同时保留现有视觉和交互。
+面向支持 `SKILL.md` 的 AI Agent 的两个通用技能：拆分已有 HTML 原型，并让后续修改有明确的文件位置，同时保留现有视觉和交互。
 
-**版本：v1.0.0** · [快速安装](#快速安装codex) · [完整案例](examples/event-registration/CASE-STUDY_20261109-184615.md) · [更新记录](CHANGELOG_20261110-115648.md) · [MIT License](LICENSE)
+**技能稳定版本：v1.0.0** · [安装方式](#安装) · [完整案例](examples/event-registration/CASE-STUDY_20261110-132301.md) · [更新记录](CHANGELOG_20261110-132301.md) · [MIT License](LICENSE)
 
 ![维护版报名原型：新增手机号](examples/event-registration/screenshots/03-after-change-final.jpg)
 
-虚构活动报名案例包含三个版本：**原始单文件 → 拆为 8 个文件 → 仅改 2 个文件增加必填手机号**。附桌面与窄屏实测截图、复现提示词、变更地图和验证脚本。[查看全部对照与验收记录](EXAMPLES_20261109-184615.md)。
+虚构活动报名案例包含三个版本：**原始单文件 → 拆为 8 个文件 → 仅改 2 个文件增加必填手机号**。附桌面与窄屏实测截图、复现提示词、变更地图和验证脚本。[查看全部对照与验收记录](EXAMPLES_20261110-132301.md)。
 
-## 快速安装（Codex）
+## 安装
 
-在支持内置 `skill-installer` 的 Codex 中，复制下面这段话，可一次安装两个 skill：
+这两个 skill 使用 `SKILL.md` 格式，核心工作流不依赖特定 Agent 或安装器。选择支持该格式、并能读取和编辑项目文件的工具即可使用；安装目录和调用入口以客户端说明为准。
+
+### 通用方式：下载并导入
+
+1. 从 [稳定版本 v1.0.0](https://github.com/bright-y/prototype-skills/releases/tag/v1.0.0) 下载源码 ZIP；需要最新文档时，也可以在仓库首页选择 **Code → Download ZIP**。
+2. 解压后，选择 `skills/static-prototype-splitter/`、`skills/prototype-maintenance/` 中需要的技能文件夹，可单独或同时使用。
+3. 通过客户端的技能导入入口导入，或将整个文件夹复制到客户端规定的技能目录。保留 `SKILL.md` 和已有配套文件，按客户端要求刷新或重新加载。
+
+`SKILL.md` 包含名称、描述和工作流指令；`agents/openai.yaml` 是可选的 Codex 界面元数据，其他客户端可以忽略它。不要把 `~/.agents/skills`、`~/.codex/skills` 或任何单个工具的目录视为所有工具的通用安装路径。遇到同名技能时，先比较差异，再决定如何处理。
+
+### 支持从仓库安装的工具
+
+如果你的 Agent 支持从 GitHub 安装技能，可以把下面的请求交给它；这是一段任务提示，不是统一的 CLI 命令或必备安装器：
+
+```text
+从 GitHub 仓库 https://github.com/bright-y/prototype-skills 的 v1.0.0 标签安装：
+- skills/static-prototype-splitter
+- skills/prototype-maintenance
+使用当前工具支持的技能目录与安装方式，保留配套文件。
+已有同名技能时先提示，不要覆盖；如果不支持仓库安装，请说明手动导入方式。
+```
+
+原生支持 `SKILL.md` 的客户端可按其机制发现并加载技能。不具备原生技能机制、但能读取本地文件的 Agent，也可以按下方“按文件使用”方式尝试；这种方式不等同于完成了技能安装或自动发现。
+
+### 已实测示例：Codex
+
+以下是针对 Codex 的可选快捷方式，适用于有内置 `skill-installer` 的环境：
 
 ```text
 使用 $skill-installer，从 GitHub 仓库 bright-y/prototype-skills 的 v1.0.0 标签安装：
 - skills/static-prototype-splitter
 - skills/prototype-maintenance
 安装到用户级 ~/.agents/skills，保留各自目录及配套文件。
-如果已有同名 skill，先告知差异，不要覆盖。
+如果已有同名 skill，先提示，不要覆盖。
 ```
 
-安装需要访问 GitHub，并向本地技能目录写入文件；按照你的客户端权限提示确认即可。安装后在下一轮对话中使用下方示例；若未出现，重启 Codex。`v1.0.0` 固定这次发布的内容；希望跟随最新提交时，可把提示中的标签改成 `main`。
+安装后按 Codex 客户端的机制加载技能；若未出现，可重新加载或重启。此提示仅针对 Codex，其他客户端的生效方式以各自说明为准。
 
-### 可选：终端一次安装两个（macOS / Linux）
+<details>
+<summary>可选终端方式：使用已有的 Codex 内置安装器（macOS / Linux）</summary>
 
-需要已有 Python 3，并且本机存在以下内置安装器脚本；路径不同或脚本不存在时，使用上面的自然语言方式。此命令不安装 Python 或其他软件包。
+需要已有 Python 3 和以下安装器脚本；路径不同或脚本不存在时，请使用客户端自己的安装方式。此命令只适用于具备该脚本的环境。
 
 ```bash
 python3 "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-installer/scripts/install-skill-from-github.py" \
@@ -34,13 +61,20 @@ python3 "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-installer/scripts/inst
   --dest "$HOME/.agents/skills"
 ```
 
-安装器遇到已有同名目录会退出，不覆盖其中内容。批量安装不是事务：如果中途遇到冲突，前一个 skill 可能已安装；按实际提示检查，勿直接删除已有目录。
+该安装器遇到已有同名目录会退出，不覆盖其中内容。批量安装不是事务：中途遇到冲突时，前一个 skill 可能已经安装。具体安装器说明见 [OpenAI Docs：Build skills](https://learn.chatgpt.com/docs/build-skills)。
 
-### 手动导入与其他客户端
+</details>
 
-从 [v1.0.0 发布页](https://github.com/bright-y/prototype-skills/releases/tag/v1.0.0) 下载源码 ZIP，解压后把 `skills/` 下需要的文件夹整体放入目标客户端支持的技能目录，保留 `SKILL.md` 和 `agents/openai.yaml`。Codex 用户级目录可使用 `~/.agents/skills`。
+### 兼容与验收范围
 
-安装路径与调用方式以目标客户端为准。其他客户端和插件目录上架尚未实测；当前发布的是独立 skill 文件夹。官方安装与发现说明见 [OpenAI Docs：Build skills](https://learn.chatgpt.com/docs/build-skills)。
+| 范围 | 状态 |
+| --- | --- |
+| 技能内容 | 两份核心 `SKILL.md` 是工具无关的原型工作流，使用 YAML 名称、描述和 Markdown 指令 |
+| 下载与安装 | Codex 内置安装器已一次安装两份 skill；`v1.0.0` 文件一致性与同名目录保护已实测 |
+| 其他客户端 | 应按各客户端对 `SKILL.md` 的支持导入，尚未逐一验证安装、自动发现与调用 |
+| 工具能力 | 执行原型修改需要读取和编辑文件；运行检查、浏览器预览按任务使用客户端已有能力 |
+
+不需要为了这两个 skill 安装某个指定 Agent。通用技能格式不代表所有 AI 产品都有相同的安装入口或能够直接执行文件修改。
 
 ## 选择哪个 Skill
 
@@ -53,10 +87,20 @@ python3 "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-installer/scripts/inst
 
 ## 使用示例
 
+下面使用普通语言指定技能名称，不要求 `$`、`@` 或斜杠命令。客户端需要技能选择器或专属调用语法时，按其说明选择对应技能，再提交任务。
+
+已下载但尚未通过客户端安装时，可明确提供入口文件，例如：
+
+```text
+读取 skills/static-prototype-splitter/SKILL.md，并按其中的工作流整理 demo.html。
+```
+
+将路径改为你实际保存的位置，并确保 Agent 有权读取技能和编辑目标原型。
+
 ### 拆分静态原型
 
 ```text
-使用 $static-prototype-splitter，把 demo.html 拆成可维护的静态页面或组件。
+使用 static-prototype-splitter，把 demo.html 拆成可维护的静态页面或组件。
 保留现有视觉、文案与交互，不引入框架。
 保留原文件，新建带时间戳的交付目录，说明入口与验证结果。
 如果需要 HTTP 预览，请先说明原因。
@@ -65,7 +109,7 @@ python3 "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-installer/scripts/inst
 ### 继续维护原型
 
 ```text
-使用 $prototype-maintenance，整理现有原型的页面、字段、弹窗、数据与样式职责。
+使用 prototype-maintenance，整理现有原型的页面、字段、弹窗、数据与样式职责。
 保留当前入口、技术栈和已有本地数据。
 补充维护说明与 CHANGE-MAP，说明常见需求改哪些文件，并验证受影响交互。
 ```
@@ -73,14 +117,14 @@ python3 "${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-installer/scripts/inst
 ### 拆分页与完整预览共存
 
 ```text
-使用 $static-prototype-splitter，提供逐页维护文件和完整预览入口。
+使用 static-prototype-splitter，提供逐页维护文件和完整预览入口。
 拆分页或共享模块作为唯一维护来源；完整预览由它们加载或生成。
 说明修改后如何同步与验证。
 ```
 
 ## 完整案例：活动报名
 
-[案例索引](EXAMPLES_20261109-184615.md) · [案例说明与复现提示词](examples/event-registration/CASE-STUDY_20261109-184615.md) · [维护与运行说明](examples/event-registration/README-prototype_20261109-184615.md) · [CHANGE-MAP](examples/event-registration/CHANGE-MAP_20261109-184615.md) · [实测记录](examples/event-registration/VALIDATION_20261109-184615.md)
+[案例索引](EXAMPLES_20261110-132301.md) · [案例说明与复现提示词](examples/event-registration/CASE-STUDY_20261110-132301.md) · [维护与运行说明](examples/event-registration/README-prototype_20261109-184615.md) · [CHANGE-MAP](examples/event-registration/CHANGE-MAP_20261109-184615.md) · [实测记录](examples/event-registration/VALIDATION_20261109-184615.md)
 
 | 阶段 | 文件 | 可检查的结果 |
 | --- | --- | --- |
@@ -97,7 +141,7 @@ GitHub 的 HTML 文件页展示源码。实际操作请下载仓库 ZIP，解压
 | Skill 文件 | 两份 `SKILL.md` 的 YAML、名称和描述基础校验；两份 Codex 界面元数据检查 |
 | 案例文件与逻辑 | 提取一致性、仅两个文件的维护差异、本地链接、脚本语法、字段校验、旧记录兼容、重复提交、存储错误和文本转义 |
 | 案例浏览器操作 | 内置浏览器 HTTP 环境：确认/取消、Escape、刷新持久化、前进/后退、重复点击，以及三版 390 px 窄屏布局 |
-| 安装与发布 | 下载安装与版本核对结果见 [v1.0.0 Release](https://github.com/bright-y/prototype-skills/releases/tag/v1.0.0) |
+| 安装与发布 | Codex 安装器的下载安装与版本核对结果见 [v1.0.0 Release](https://github.com/bright-y/prototype-skills/releases/tag/v1.0.0) |
 
 案例自动检查需要已有 Python 3 与 Node，在案例目录运行 `python3 tests/verify.py`。案例已保存 10 张实测截图；详见 [VALIDATION](examples/event-registration/VALIDATION_20261109-184615.md)。
 
@@ -123,7 +167,7 @@ skills/
 examples/event-registration/     # 三个版本、文档、截图与验证脚本
 ```
 
-`SKILL.md` 是技能入口，`agents/openai.yaml` 提供可选的 Codex 界面信息。案例源码和演示数据均为独立构造的教学内容。
+`SKILL.md` 是通用技能入口；`agents/openai.yaml` 只提供可选的 Codex 界面信息，不是其他客户端使用核心指令的前提。案例源码和演示数据均为独立构造的教学内容。
 
 ## 反馈与许可
 
